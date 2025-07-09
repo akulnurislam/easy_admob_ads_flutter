@@ -104,7 +104,7 @@ void main() async {
 }
 ```
 
-See the full example in the [`example/`](https://github.com/huzaibsayyed/easy_admob_ads_flutter) folder of this repository for complete usage of all ad types with interactive UI.
+See the full example in the [`example/`](https://github.com/huzaibsayyed/easy_admob_ads_flutter/blob/main/example/lib/main.dart) folder of this repository for complete usage of all ad types with interactive UI.
 
 ## Usage
 
