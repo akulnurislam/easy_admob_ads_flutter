@@ -1,0 +1,20 @@
+name: easy_admob_ads_flutter
+description: "A new Flutter package project."
+version: 0.0.1
+homepage: https://github.com/huzaibsayyed/easy_admob_ads_flutter
+repository: https://github.com/huzaibsayyed/easy_admob_ads_flutter
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^6.0.0
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
