@@ -175,6 +175,8 @@ class _AdsDemoState extends State<AdsDemo> {
           children: [
             AdmobNativeAd.small(),
             SizedBox(height: 20),
+            Text("Check the console logs"),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _showInterstitialAd();
