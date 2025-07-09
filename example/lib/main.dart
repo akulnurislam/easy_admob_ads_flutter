@@ -120,7 +120,7 @@ class _AdsDemoState extends State<AdsDemo> {
   }
 
   void _showInterstitialAd() async {
-    final result = await _rewardedAd.showAd();
+    final result = await _interstitialAd.showAd();
 
     if (!result.wasShown && mounted) {
       // You can provide specific messages or actions based on the fail reason
@@ -159,6 +159,9 @@ class _AdsDemoState extends State<AdsDemo> {
 
   @override
   void dispose() {
+    _interstitialAd.dispose();
+    _rewardedAd.dispose();
+    _rewardedInterstitialAd.dispose();
     super.dispose();
   }
 
