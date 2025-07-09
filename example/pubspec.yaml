@@ -1,5 +1,5 @@
 name: example
-description: "A new Flutter project."
+description: A demo Flutter app showcasing all AdMob ad formats using the easy_admob_ads_flutter package.
 publish_to: 'none'
 version: 0.1.0
 

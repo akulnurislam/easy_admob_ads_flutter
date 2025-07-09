@@ -1,3 +1,3 @@
-# Example project with easy_admob_ads_flutter package
+# Example project using easy_admob_ads_flutter package
 
-A new Flutter project.
+A demo Flutter app showcasing all AdMob ad formats using the easy_admob_ads_flutter package.
