@@ -34,6 +34,9 @@ class AdmobService {
     });
     await consentCompleter.future;
 
+    AdHelper.isPrivacyOptionsRequired = await _consentManager.isPrivacyOptionsRequired();
+    debugPrint('[ConsentManager] AdHelper.isPrivacyOptionsRequired = ${AdHelper.isPrivacyOptionsRequired}');
+
     // Step 2: Only initialize MobileAds if we are allowed to request ads.
     if (await _consentManager.canRequestAds()) {
       await MobileAds.instance.initialize();

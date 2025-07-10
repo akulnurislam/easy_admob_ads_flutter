@@ -68,20 +68,9 @@ class _AdsDemoState extends State<AdsDemo> {
   void initState() {
     super.initState();
     _loadAllAds();
-
-    // Check if a privacy options entry point is required.
-    _getIsPrivacyOptionsRequired();
   }
 
   final _consentManager = ConsentManager();
-  var _isPrivacyOptionsRequired = false;
-  void _getIsPrivacyOptionsRequired() async {
-    if (await _consentManager.isPrivacyOptionsRequired()) {
-      setState(() {
-        _isPrivacyOptionsRequired = true;
-      });
-    }
-  }
 
   Future<void> _loadAllAds() async {
     // Interstitial
@@ -237,7 +226,7 @@ class _AdsDemoState extends State<AdsDemo> {
                 },
                 child: Text("Ad Inspector"),
               ),
-              if (_isPrivacyOptionsRequired) ...[
+              if (AdHelper.isPrivacyOptionsRequired) ...[
                 SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {

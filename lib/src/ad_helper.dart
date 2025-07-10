@@ -17,6 +17,9 @@ class AdHelper {
   // Flag to control test vs production ads - default based on build mode
   static bool isTestMode = kDebugMode;
 
+  // Flag for Consent
+  static bool isPrivacyOptionsRequired = false;
+
   // Get Banner Ad Unit ID
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {

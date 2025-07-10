@@ -38,11 +38,11 @@ class AdmobAppOpenAd {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      bool isFirstLaunch = !(prefs.getBool('app_launched_before') ?? false);
+      bool isFirstLaunch = !(prefs.getBool('easyadmobadsflutter_app_launched_before') ?? false);
 
       // If this is the first launch, set the flag for future
       if (isFirstLaunch) {
-        await prefs.setBool('app_launched_before', true);
+        await prefs.setBool('easyadmobadsflutter_app_launched_before', true);
         _isAppFirstEverOpen = true;
       } else {
         _isAppFirstEverOpen = false;
