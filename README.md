@@ -8,7 +8,7 @@
 [![Code Size](https://img.shields.io/github/languages/code-size/huzaibsayyed/easy_admob_ads_flutter?logo=github\&logoColor=white)](https://github.com/huzaibsayyed/easy_admob_ads_flutter)
 [![License](https://img.shields.io/github/license/huzaibsayyed/easy_admob_ads_flutter?logo=open-source-initiative\&logoColor=green)](https://github.com/huzaibsayyed/easy_admob_ads_flutter/blob/main/LICENSE)
 
-**Show some 💙 by giving the repo a ⭐ and liking the package on pub.dev!**
+**Show some ❤️ by giving the [repo](https://github.com/huzaibsayyed/easy_admob_ads_flutter) a ⭐ and liking 👍 the package on [pub.dev](https://pub.dev/packages/easy_admob_ads_flutter)!**
 
 ## Features
 
