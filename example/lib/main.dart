@@ -184,73 +184,74 @@ class _AdsDemoState extends State<AdsDemo> {
     return Scaffold(
       appBar: AppBar(title: const Text('AdMob All Ads Demo')),
       bottomNavigationBar: AdmobBannerAd(adSize: AdSize(width: screenWidth.toInt(), height: 120)),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            AdmobNativeAd.small(),
-            SizedBox(height: 20),
-            Text("Check the console logs"),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _showInterstitialAd();
-              },
-              child: const Text('Show Interstitial'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _rewardedAd.showAd();
-              },
-              child: const Text('Show Rewarded'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _rewardedInterstitialAd.showAd();
-              },
-              child: const Text('Show Rewarded Interstitial'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _showAppOpenAd();
-              },
-              child: const Text('Manual Show App Open Ad'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  showAds = !showAds;
-                  AdHelper.showAds = showAds;
-                });
-              },
-              child: Text(showAds ? 'Stop showing ads' : 'Start showing ads'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                MobileAds.instance.openAdInspector((error) {
-                  // Error will be non-null if ad inspector closed due to an error.
-                });
-              },
-              child: Text("Ad Inspector"),
-            ),
-            if (_isPrivacyOptionsRequired) ...[
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              AdmobNativeAd.small(),
+              Text("Check the console logs", style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  _showInterstitialAd();
+                },
+                child: const Text('Show Interstitial'),
+              ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  _rewardedAd.showAd();
+                },
+                child: const Text('Show Rewarded'),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _consentManager.showPrivacyOptionsForm((formError) {
-                    if (formError != null) {
-                      debugPrint("${formError.errorCode}: ${formError.message}");
-                    }
+                  _rewardedInterstitialAd.showAd();
+                },
+                child: const Text('Show Rewarded Interstitial'),
+              ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  _showAppOpenAd();
+                },
+                child: const Text('Manual Show App Open Ad'),
+              ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    showAds = !showAds;
+                    AdHelper.showAds = showAds;
                   });
                 },
-                child: Text("Show GDPR Ad Privacy"),
+                child: Text(showAds ? 'Stop showing ads' : 'Start showing ads'),
               ),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  MobileAds.instance.openAdInspector((error) {
+                    // Error will be non-null if ad inspector closed due to an error.
+                  });
+                },
+                child: Text("Ad Inspector"),
+              ),
+              if (_isPrivacyOptionsRequired) ...[
+                SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    _consentManager.showPrivacyOptionsForm((formError) {
+                      if (formError != null) {
+                        debugPrint("${formError.errorCode}: ${formError.message}");
+                      }
+                    });
+                  },
+                  child: Text("Show GDPR Ad Privacy"),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
