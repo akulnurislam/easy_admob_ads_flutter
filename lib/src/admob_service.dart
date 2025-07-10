@@ -6,8 +6,10 @@ import 'package:easy_admob_ads_flutter/src/widgets/admob_app_open_ad.dart';
 import 'package:easy_admob_ads_flutter/src/widgets/admob_consent_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 class AdmobService {
+  static final Logger _logger = Logger('AdmobService');
   static final AdmobService _instance = AdmobService._internal();
 
   factory AdmobService() => _instance;
@@ -19,44 +21,53 @@ class AdmobService {
   final ConsentManager _consentManager = ConsentManager();
 
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      _logger.warning('AdmobService is already initialized. Skipping.');
+      return;
+    }
 
-    debugPrint('[ConsentManager] AdHelper.showConstentGDPR = ${AdHelper.showConstentGDPR}');
+    _logger.info('Starting AdmobService initialization...');
+    _logger.fine('AdHelper.showConstentGDPR = ${AdHelper.showConstentGDPR}');
+
     // Step 1: Gather consent before initializing ads.
+    _logger.info('Gathering user consent...');
     final Completer<void> consentCompleter = Completer();
     _consentManager.gatherConsent((FormError? error) {
       if (error != null) {
-        debugPrint('[ConsentManager] Error gathering consent: ${error.errorCode} - ${error.message}');
+        _logger.severe('Error gathering consent: ${error.errorCode} - ${error.message}');
       } else {
-        debugPrint('[ConsentManager] Consent successfully gathered.');
+        _logger.info('Consent successfully gathered.');
       }
       consentCompleter.complete();
     });
     await consentCompleter.future;
 
     AdHelper.isPrivacyOptionsRequired = await _consentManager.isPrivacyOptionsRequired();
-    debugPrint('[ConsentManager] AdHelper.isPrivacyOptionsRequired = ${AdHelper.isPrivacyOptionsRequired}');
+    _logger.fine('AdHelper.isPrivacyOptionsRequired = ${AdHelper.isPrivacyOptionsRequired}');
 
     // Step 2: Only initialize MobileAds if we are allowed to request ads.
-    if (await _consentManager.canRequestAds()) {
+    final canRequestAds = await _consentManager.canRequestAds();
+    if (canRequestAds) {
+      _logger.info('User has consented to ads. Initializing MobileAds...');
       await MobileAds.instance.initialize();
 
       if (kDebugMode) {
-        final testDeviceIds = ['kGADSimulatorID'];
+        final testDeviceIds = AdHelper.testDeviceIds;
         MobileAds.instance.updateRequestConfiguration(RequestConfiguration(testDeviceIds: testDeviceIds));
+        _logger.fine('Test device IDs set: $testDeviceIds');
       }
 
       // Step 3: App open ad setup
       final appOpenAdManager = AdmobAppOpenAd();
+      _logger.info('Loading App Open Ad...');
       _appLifecycleReactor = AppLifecycleReactor(appOpenAdManager: appOpenAdManager);
       await appOpenAdManager.loadAd();
       _appLifecycleReactor.listenToAppStateChanges();
 
       _isInitialized = true;
+      _logger.info('AdmobService successfully initialized.');
     } else {
-      debugPrint('Ads cannot be requested due to lack of consent.');
+      _logger.warning('Ads cannot be requested due to lack of consent.');
     }
   }
-
-  bool shouldShowAds() => AdHelper.showAds;
 }

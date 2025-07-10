@@ -9,6 +9,11 @@ void main() async {
   // Android: https://developers.google.com/admob/flutter/quick-start#android
   // iOS:    https://developers.google.com/admob/flutter/quick-start#ios
 
+  AdHelper.setupAdLogging();
+
+  // Set platform-specific test device IDs to ensure test ads are shown during development.
+  AdHelper.testDeviceIds = ['kGADSimulatorID', 'YOUR_ANDROID_TEST_DEVICE_ID'];
+
   // Initialize ad unit IDs for Android and/or iOS (required for at least one)
   // Leave any value as an empty string ("") to skip that ad type.
   AdIdRegistry.initialize(

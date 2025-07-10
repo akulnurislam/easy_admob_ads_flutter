@@ -2,10 +2,11 @@ import 'dart:async';
 import 'package:easy_admob_ads_flutter/src/ad_exceptions.dart';
 import 'package:easy_admob_ads_flutter/src/ad_id_registry.dart';
 import 'package:easy_admob_ads_flutter/src/ad_type.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 class AdRealIdValidation {
+  static final Logger _logger = Logger('AdRealIdValidation');
   static Future<void> validateAdUnits() async {
     final adTypeMap = AdIdRegistry.currentPlatformAdIds;
 
@@ -52,12 +53,9 @@ class AdRealIdValidation {
       loader: (id) => loadNativeAd(adUnitId: id),
     );
 
-    debugPrint('🧪 Real Ad unit validation process completed.');
-    debugPrint('══════════ RESULTS ══════════');
     for (final msg in results) {
-      debugPrint(msg);
+      _logger.info(msg);
     }
-    debugPrint('═════════════════════════════');
   }
 
   /// ✅ Load BannerAd
