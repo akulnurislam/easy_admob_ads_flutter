@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 /// Exception class for handling ad-related errors.
 class AdException implements Exception {
+  static final Logger _logger = Logger('AdException');
+
   /// Entry point for ad error handling.
   static void check(LoadAdError error, {required String adUnitId, adType}) {
     if (!kDebugMode) return; // Skip in release mode
@@ -10,7 +13,7 @@ class AdException implements Exception {
     if (_isCriticalConfigError(error)) {
       _terminateApp(error, adUnitId: adUnitId, adType: adType);
     } else {
-      debugPrint('⚠️ Ad Error: $error.message');
+      _logger.warning('⚠️ Non-critical ad load error: ${error.message}');
     }
   }
 
@@ -18,22 +21,20 @@ class AdException implements Exception {
   static void _terminateApp(LoadAdError error, {String? adUnitId, String? adType}) {
     final adUnit = adUnitId ?? 'unknown';
 
-    final fatalMessage =
-        '''
-
-❌ AdMob Format Mismatch
-🔹 Ad Type: $adType
-🔹 Ad Unit: $adUnit
-🔹 Ad Error Code: ${error.code}
-🔹 Ad Error Message: ${error.message}
-🔧 Fixes:
-   1. Verify Ad Unit ID
-   2. Match format in AdMob
-   3. Use correct ad type
-⚠️ Retrying won’t help — fix the config.
-''';
-
-    debugPrint(fatalMessage);
+    _logger.severe(
+      [
+        '❌ AdMob Format Mismatch',
+        '🔹 Ad Type: $adType',
+        '🔹 Ad Unit: $adUnit',
+        '🔹 Ad Error Code: ${error.code}',
+        '🔹 Ad Error Message: ${error.message}',
+        '🔧 Fixes:',
+        '   1. Verify Ad Unit ID',
+        '   2. Match format in AdMob',
+        '   3. Use correct ad type',
+        '⚠️ Retrying won’t help — fix the config.',
+      ].join('\n'),
+    );
 
     Future.error(FlutterError("Admob Ad Error"));
   }

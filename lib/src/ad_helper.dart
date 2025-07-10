@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:easy_admob_ads_flutter/easy_admob_ads_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 final adTypeMap = AdIdRegistry.currentPlatformAdIds;
@@ -24,7 +25,7 @@ class AdHelper {
   static void setupAdLogging({Level level = Level.ALL}) {
     Logger.root.level = level;
     Logger.root.onRecord.listen((record) {
-      print('[${record.level.name}] ${record.loggerName}: ${record.message}');
+      debugPrint('[${record.level.name}] ${record.loggerName}: ${record.message}');
     });
   }
 
