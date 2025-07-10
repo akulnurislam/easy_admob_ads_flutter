@@ -170,7 +170,6 @@ class _AdsDemoState extends State<AdsDemo> {
     return Scaffold(
       appBar: AppBar(title: const Text('AdMob All Ads Demo')),
       bottomNavigationBar: AdmobBannerAd(adSize: AdSize(width: screenWidth.toInt(), height: 120)),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -214,6 +213,15 @@ class _AdsDemoState extends State<AdsDemo> {
                 });
               },
               child: Text(showAds ? 'Stop showing ads' : 'Start showing ads'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                MobileAds.instance.openAdInspector((error) {
+                  // Error will be non-null if ad inspector closed due to an error.
+                });
+              },
+              child: Text("Ad Inspector"),
             ),
           ],
         ),

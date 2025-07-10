@@ -15,4 +15,4 @@ export 'src/widgets/admob_rewarded_ad.dart';
 export 'src/widgets/admob_rewarded_interstitial_ad.dart';
 
 // Package Exports
-export 'package:google_mobile_ads/google_mobile_ads.dart' show AdSize;
+export 'package:google_mobile_ads/google_mobile_ads.dart';
