@@ -14,3 +14,7 @@
 ## 0.0.4
 
 * Added Screenshots to README.md
+
+## 0.0.5
+
+* Files formatted

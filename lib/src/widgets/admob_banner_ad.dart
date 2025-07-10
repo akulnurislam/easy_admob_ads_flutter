@@ -12,6 +12,7 @@ class AdmobBannerAd extends StatefulWidget {
   const AdmobBannerAd({super.key, this.adSize = AdSize.banner, this.onAdStateChanged, this.keepSpaceWhenAdNotAvailable = false});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AdmobBannerAdState createState() => _AdmobBannerAdState();
 }
 
