@@ -11,12 +11,7 @@ topics:
   - admob
   - ads
   - google-mobile-ads
-  - flutter-plugin
-  - banner-ads
-  - interstitial-ads
-  - rewarded-ads
-  - app-open-ads
-  - native-ads
+  - google admob flutter
   - monetization
 screenshots:
   - description: 'Displays various AdMob ad types integrated using the easy_admob_ads_flutter package.'
