@@ -32,7 +32,8 @@ void main() async {
 
   // 🧠 Global Ad Configuration
   AdHelper.showAds = true; // Set to false to disable all ads globally
-  AdHelper.showAppOpenAds = false; // Set to false to disable App Open Ad on startup
+  AdHelper.showAppOpenAds = true; // Set to false to disable App Open Ad on startup
+  AdHelper.showConstentGDPR = true; // Simulate GDPR consent (debug only, false in release)
 
   // 🚀 Initialize Google Mobile Ads SDK
   await AdmobService().initialize();
@@ -67,6 +68,19 @@ class _AdsDemoState extends State<AdsDemo> {
   void initState() {
     super.initState();
     _loadAllAds();
+
+    // Check if a privacy options entry point is required.
+    _getIsPrivacyOptionsRequired();
+  }
+
+  final _consentManager = ConsentManager();
+  var _isPrivacyOptionsRequired = false;
+  void _getIsPrivacyOptionsRequired() async {
+    if (await _consentManager.isPrivacyOptionsRequired()) {
+      setState(() {
+        _isPrivacyOptionsRequired = true;
+      });
+    }
   }
 
   Future<void> _loadAllAds() async {
@@ -223,6 +237,19 @@ class _AdsDemoState extends State<AdsDemo> {
               },
               child: Text("Ad Inspector"),
             ),
+            if (_isPrivacyOptionsRequired) ...[
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _consentManager.showPrivacyOptionsForm((formError) {
+                    if (formError != null) {
+                      debugPrint("${formError.errorCode}: ${formError.message}");
+                    }
+                  });
+                },
+                child: Text("Show GDPR Ad Privacy"),
+              ),
+            ],
           ],
         ),
       ),

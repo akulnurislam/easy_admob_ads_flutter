@@ -5,6 +5,7 @@ export 'src/admob_service.dart';
 export 'src/ad_helper.dart';
 export 'src/models/ad_state.dart';
 export 'src/models/ad_result.dart';
+export 'src/widgets/admob_consent_manager.dart';
 
 // Ads
 export 'src/widgets/admob_app_open_ad.dart';

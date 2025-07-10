@@ -21,6 +21,8 @@ This package simplifies integrating multiple AdMob ad formats in your Flutter ap
 * App Open Ads
 * Native Ads
 
+Also includes built-in support for GDPR consent using Google's User Messaging Platform (UMP), ensuring compliance in GDPR-affected regions.
+
 ## Getting Started
 
 To get started with `easy_admob_ads_flutter`, follow the steps below to integrate AdMob ads into your Flutter app.
@@ -97,6 +99,9 @@ void main() async {
   AdHelper.showAds = true;
   AdHelper.showAppOpenAds = true;
 
+  // Simulate GDPR consent (debug only, false in release)
+  AdHelper.showConstentGDPR = true;
+
   // Initialize Google Mobile Ads
   await AdmobService().initialize();
 
@@ -163,6 +168,30 @@ appOpenAd.showAdIfAvailable();
 ```
 
 You can also control when App Open ads show automatically using: `AdHelper.showAppOpenAds = true;`
+
+### GDPR Consent (UMP)
+
+```dart
+final consentManager = ConsentManager();
+
+// Request consent on app launch
+consentManager.gatherConsent((error) {
+  if (error != null) {
+    debugPrint('Consent error: ${error.errorCode} - ${error.message}');
+  } else {
+    debugPrint('Consent successfully gathered');
+  }
+});
+
+// Optionally show Privacy Options UI (if required)
+consentManager.showPrivacyOptionsForm((error) {
+  if (error != null) {
+    debugPrint('Privacy form error: ${error.errorCode} - ${error.message}');
+  }
+});
+```
+
+This ensures GDPR compliance using Google’s User Messaging Platform (UMP). Use `AdHelper.showConstentGDPR = true` in debug builds to simulate consent for testing.
 
 ## Author
 
