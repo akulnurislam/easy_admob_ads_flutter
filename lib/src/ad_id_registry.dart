@@ -6,10 +6,7 @@ class AdIdRegistry {
   static Map<AdType, String>? _androidAdIds;
 
   /// Allow user to provide either iOS, Android, or both
-  static void initialize({
-    Map<AdType, String>? ios,
-    Map<AdType, String>? android,
-  }) {
+  static void initialize({Map<AdType, String>? ios, Map<AdType, String>? android}) {
     if (ios != null) _iosAdIds = ios;
     if (android != null) _androidAdIds = android;
   }
