@@ -10,3 +10,7 @@
 ## 0.0.3
 
 * Added Screenshots & Improved Example App UI
+
+## 0.0.4
+
+* Added Screenshots to README.md

@@ -10,6 +10,12 @@
 
 **Show some ❤️ by giving the [repo](https://github.com/huzaibsayyed/easy_admob_ads_flutter) a ⭐ and liking 👍 the package on [pub.dev](https://pub.dev/packages/easy_admob_ads_flutter)!**
 
+## Screenshots
+<p float="left">
+  <img src="example/screenshots/demo.png" width="20%" alt="Static AdMob Demo" />
+  <img src="example/screenshots/demo.gif" width="20.1%" alt="Animated AdMob Demo" />
+</p>
+
 ## Features
 
 This package simplifies integrating multiple AdMob ad formats in your Flutter apps, including:
