@@ -1,9 +1,28 @@
 name: easy_admob_ads_flutter
 description: A simple and flexible Flutter package to integrate AdMob ad formats with minimal setup.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/huzaibsayyed/easy_admob_ads_flutter
 repository: https://github.com/huzaibsayyed/easy_admob_ads_flutter
 issue_tracker: https://github.com/huzaibsayyed/easy_admob_ads_flutter/issues
+platforms:
+  android:
+  ios:
+topics:
+  - admob
+  - ads
+  - google-mobile-ads
+  - flutter-plugin
+  - banner-ads
+  - interstitial-ads
+  - rewarded-ads
+  - app-open-ads
+  - native-ads
+  - monetization
+screenshots:
+  - description: 'Displays various AdMob ad types integrated using the easy_admob_ads_flutter package.'
+    path: example/screenshots/demo.png
+  - description: 'Demonstrates integration of all major AdMob ad types using easy_admob_ads_flutter.'
+    path: example/screenshots/demo.gif
 
 environment:
   sdk: ^3.8.1

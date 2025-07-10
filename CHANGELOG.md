@@ -6,3 +6,7 @@
 ## 0.0.2
 
 * Added: GDPR Consent
+
+## 0.0.3
+
+* Added Screenshots & Improved Example App UI

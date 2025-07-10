@@ -8,10 +8,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class AdRealIdValidation {
   static Future<void> validateAdUnits() async {
     final adTypeMap = AdIdRegistry.currentPlatformAdIds;
-    
+
     debugPrint('🔎 Testing Real Test ID\'s');
 
-    Future<void> runValidation({required AdType adType, required Future<void> Function(String adUnitId) loader}) async {
+    Future<void> runValidation({
+      required AdType adType,
+      required Future<void> Function(String adUnitId) loader,
+    }) async {
       final adUnitId = (adTypeMap[adType] ?? '').trim();
 
       if (adUnitId.isEmpty) {
@@ -117,7 +120,9 @@ class AdRealIdValidation {
   }
 
   /// ✅ Load Rewarded Interstitial Ad
-  static Future<RewardedInterstitialAd> loadRewardedInterstitialAd({required String adUnitId}) {
+  static Future<RewardedInterstitialAd> loadRewardedInterstitialAd({
+    required String adUnitId,
+  }) {
     final completer = Completer<RewardedInterstitialAd>();
 
     RewardedInterstitialAd.load(
@@ -126,7 +131,11 @@ class AdRealIdValidation {
       rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
         onAdLoaded: (ad) => completer.complete(ad),
         onAdFailedToLoad: (error) {
-          AdException.check(error, adUnitId: adUnitId, adType: "RewardedInterstitial");
+          AdException.check(
+            error,
+            adUnitId: adUnitId,
+            adType: "RewardedInterstitial",
+          );
           completer.completeError(error);
         },
       ),
@@ -160,7 +169,9 @@ class AdRealIdValidation {
 
     final ad = NativeAd(
       adUnitId: adUnitId,
-      nativeTemplateStyle: NativeTemplateStyle(templateType: TemplateType.small),
+      nativeTemplateStyle: NativeTemplateStyle(
+        templateType: TemplateType.small,
+      ),
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) => completer.complete(ad as NativeAd),
