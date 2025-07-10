@@ -9,55 +9,55 @@ class AdRealIdValidation {
   static Future<void> validateAdUnits() async {
     final adTypeMap = AdIdRegistry.currentPlatformAdIds;
 
-    debugPrint('🔎 Testing Real Test ID\'s');
+    final List<String> results = [];
 
-    Future<void> runValidation({required AdType adType, required Future<void> Function(String adUnitId) loader}) async {
+    Future<void> runValidation({required AdType adType, required Future<dynamic> Function(String adUnitId) loader}) async {
       final adUnitId = (adTypeMap[adType] ?? '').trim();
 
       if (adUnitId.isEmpty) {
-        debugPrint('⏭️ Skipped ${adType.name} ad: Ad Unit ID is empty.');
+        results.add('⏭️ Skipped ${adType.name} ad: Ad Unit ID is empty.');
         return;
       }
 
       try {
         await loader(adUnitId);
-        debugPrint('✅ ${adType.name} ad loaded successfully.');
+        results.add('✅ ${adType.name} ad loaded successfully.');
       } catch (e) {
-        debugPrint('❌ ${adType.name} ad failed to load: $e');
+        results.add('❌ ${adType.name} ad failed to load: $e');
       }
     }
 
     await runValidation(
       adType: AdType.banner,
-      loader: (adUnitId) => loadBannerAd(adUnitId: adUnitId),
+      loader: (id) => loadBannerAd(adUnitId: id),
     );
-
     await runValidation(
       adType: AdType.interstitial,
-      loader: (adUnitId) => loadInterstitialAd(adUnitId: adUnitId),
+      loader: (id) => loadInterstitialAd(adUnitId: id),
     );
-
     await runValidation(
       adType: AdType.rewarded,
-      loader: (adUnitId) => loadRewardedAd(adUnitId: adUnitId),
+      loader: (id) => loadRewardedAd(adUnitId: id),
     );
-
     await runValidation(
       adType: AdType.rewardedInterstitial,
-      loader: (adUnitId) => loadRewardedInterstitialAd(adUnitId: adUnitId),
+      loader: (id) => loadRewardedInterstitialAd(adUnitId: id),
     );
-
     await runValidation(
       adType: AdType.appOpen,
-      loader: (adUnitId) => loadAppOpenAd(adUnitId: adUnitId),
+      loader: (id) => loadAppOpenAd(adUnitId: id),
     );
-
     await runValidation(
       adType: AdType.native,
-      loader: (adUnitId) => loadNativeAd(adUnitId: adUnitId),
+      loader: (id) => loadNativeAd(adUnitId: id),
     );
 
     debugPrint('🧪 Real Ad unit validation process completed.');
+    debugPrint('══════════ RESULTS ══════════');
+    for (final msg in results) {
+      debugPrint(msg);
+    }
+    debugPrint('═════════════════════════════');
   }
 
   /// ✅ Load BannerAd

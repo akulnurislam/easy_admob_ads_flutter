@@ -44,10 +44,6 @@ class AdmobService {
       if (kDebugMode) {
         final testDeviceIds = ['kGADSimulatorID'];
         MobileAds.instance.updateRequestConfiguration(RequestConfiguration(testDeviceIds: testDeviceIds));
-      } else {
-        if (!AdHelper.isTestMode) {
-          AdHelper.setProductionAdUnits();
-        }
       }
 
       // Step 3: App open ad setup

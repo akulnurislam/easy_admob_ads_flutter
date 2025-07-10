@@ -79,39 +79,47 @@ Inside your `main.dart`:
 
 ```dart
 void main() async {
+  // Ensure platform bindings are initialized before any async calls
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Set your actual AdMob App IDs in AndroidManifest.xml and Info.plist:
+  // Android: https://developers.google.com/admob/flutter/quick-start#android
+  // iOS:    https://developers.google.com/admob/flutter/quick-start#ios
+
   // Initialize ad unit IDs for Android and/or iOS (required for at least one)
+  // Leave any value as an empty string ("") to skip that ad type.
   AdIdRegistry.initialize(
     ios: {
-      AdType.banner: "ca-app-pub-ios-banner",
-      AdType.interstitial: "ca-app-pub-ios-interstitial",
-      AdType.rewarded: "ca-app-pub-ios-rewarded",
-      AdType.rewardedInterstitial: "ca-app-pub-ios-rewarded-int",
-      AdType.appOpen: "ca-app-pub-ios-appopen",
-      AdType.native: "", // Leave empty to skip a specific type
+      AdType.banner: 'ca-app-pub-3940256099942544/2934735716', // Test ID
+      AdType.interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test ID
+      AdType.rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test ID
+      AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/6978759866', // Test ID
+      AdType.appOpen: 'ca-app-pub-3940256099942544/5575463023', // Test ID
+      AdType.native: 'ca-app-pub-3940256099942544/3986624511', // Test ID
     },
     android: {
-      AdType.banner: "ca-app-pub-android-banner",
-      AdType.interstitial: "ca-app-pub-android-interstitial",
-      AdType.rewarded: "ca-app-pub-android-rewarded",
-      AdType.rewardedInterstitial: "ca-app-pub-android-rewarded-int",
-      AdType.appOpen: "ca-app-pub-android-appopen",
-      AdType.native: "", // Leave empty to skip a specific type
+      AdType.banner: 'ca-app-pub-3940256099942544/6300978111', // Test ID
+      AdType.interstitial: 'ca-app-pub-3940256099942544/1033173712', // Test ID
+      AdType.rewarded: 'ca-app-pub-3940256099942544/5224354917', // Test ID
+      AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/5354046379', // Test ID
+      AdType.appOpen: 'ca-app-pub-3940256099942544/3419835294', // Test ID
+      AdType.native: 'ca-app-pub-3940256099942544/2247696110', // Test ID
     },
   );
 
-  // Optional: configure ad visibility
-  AdHelper.showAds = true;
-  AdHelper.showAppOpenAds = true;
+  // Global Ad Configuration
+  AdHelper.showAds = true; // Set to false to disable all ads globally
+  // AdHelper.showAppOpenAds = true; // Set to false to disable App Open Ad on startup
 
-  // Simulate GDPR consent (debug only, false in release)
-  AdHelper.showConstentGDPR = true;
+  // AdHelper.showConstentGDPR = true; // Simulate GDPR consent (debug only, false in release)
 
-  // Initialize Google Mobile Ads
+  // Initialize Google Mobile Ads SDK
   await AdmobService().initialize();
 
-  runApp(const MyApp());
+  // Optional: Use during development to test if all ad units load successfully
+  // await AdRealIdValidation.validateAdUnits();
+
+  runApp(const MainApp());
 }
 ```
 
@@ -180,21 +188,18 @@ You can also control when App Open ads show automatically using: `AdHelper.showA
 ```dart
 final consentManager = ConsentManager();
 
-// Request consent on app launch
-consentManager.gatherConsent((error) {
-  if (error != null) {
-    debugPrint('Consent error: ${error.errorCode} - ${error.message}');
-  } else {
-    debugPrint('Consent successfully gathered');
-  }
-});
-
-// Optionally show Privacy Options UI (if required)
-consentManager.showPrivacyOptionsForm((error) {
-  if (error != null) {
-    debugPrint('Privacy form error: ${error.errorCode} - ${error.message}');
-  }
-});
+if (AdHelper.isPrivacyOptionsRequired) ...[
+SizedBox(height: 15),
+ElevatedButton(
+  onPressed: () {
+    _consentManager.showPrivacyOptionsForm((formError) {
+      if (formError != null) {
+        debugPrint("${formError.errorCode}: ${formError.message}");
+      }
+    });
+  },
+  child: Text("Show GDPR Ad Privacy"),
+),
 ```
 
 This ensures GDPR compliance using Google’s User Messaging Platform (UMP). Use `AdHelper.showConstentGDPR = true` in debug builds to simulate consent for testing.

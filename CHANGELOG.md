@@ -18,3 +18,9 @@
 ## 0.0.5
 
 * Files formatted
+
+## 0.0.6
+
+* Revemoved test id bug
+* Updated README.md
+* Consent Added with Global isPrivacyOptionRequired variable
