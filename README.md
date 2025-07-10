@@ -86,6 +86,9 @@ void main() async {
   // Android: https://developers.google.com/admob/flutter/quick-start#android
   // iOS:    https://developers.google.com/admob/flutter/quick-start#ios
 
+  // Sets up global logging for Easy Admob Ads Flutter Package
+  AdHelper.setupAdLogging();
+
   // Initialize ad unit IDs for Android and/or iOS (required for at least one)
   // Leave any value as an empty string ("") to skip that ad type.
   AdIdRegistry.initialize(

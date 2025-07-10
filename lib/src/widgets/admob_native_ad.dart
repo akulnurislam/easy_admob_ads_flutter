@@ -3,6 +3,7 @@ import 'package:easy_admob_ads_flutter/src/ad_helper.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_state.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 /// A widget that displays a native ad using Google's pre-built templates
 class AdmobNativeAd extends StatefulWidget {
@@ -71,6 +72,7 @@ class AdmobNativeAd extends StatefulWidget {
 }
 
 class _AdmobNativeAdState extends State<AdmobNativeAd> {
+  static final Logger _logger = Logger('AdmobNativeAd');
   NativeAd? _nativeAd;
   AdState _adState = AdState.initial;
   bool _isAdLoaded = false;
@@ -91,6 +93,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
   }
 
   void _loadAd() {
+    _logger.info('Loading native ad...');
     setState(() {
       _adState = AdState.loading;
       _isAdLoaded = false;
@@ -104,7 +107,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
       adUnitId: AdHelper.nativeAdUnitId,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
-          debugPrint('Native ad loaded successfully');
+          _logger.info('Native ad loaded successfully.');
           if (mounted) {
             setState(() {
               _adState = AdState.loaded;
@@ -118,7 +121,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
-          debugPrint('Native ad failed to load: ${error.message}');
+          _logger.warning('Native ad failed to load: ${error.message}');
           AdException.check(error, adUnitId: AdHelper.nativeAdUnitId, adType: "Native Ad");
           if (mounted) {
             setState(() {
@@ -134,24 +137,16 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
           if (_retryAttempt < _maxRetryAttempts && mounted) {
             _retryAttempt++;
             final int retryDelay = _retryAttempt * 20; // Increasing delay with each retry
-            debugPrint('Retrying to load Native ad in $retryDelay seconds (attempt $_retryAttempt of $_maxRetryAttempts)');
+            _logger.fine('Retrying native ad load in $retryDelay seconds (attempt $_retryAttempt of $_maxRetryAttempts)');
             Future.delayed(Duration(seconds: retryDelay), () {
               if (mounted) _loadAd();
             });
           }
         },
-        onAdOpened: (ad) {
-          debugPrint('Native ad opened');
-        },
-        onAdClosed: (ad) {
-          debugPrint('Native ad closed');
-        },
-        onAdImpression: (ad) {
-          debugPrint('Native ad impression recorded');
-        },
-        onAdClicked: (ad) {
-          debugPrint('Native ad clicked');
-        },
+        onAdOpened: (_) => _logger.fine('Native ad opened.'),
+        onAdClosed: (_) => _logger.fine('Native ad closed.'),
+        onAdImpression: (_) => _logger.fine('Native ad impression recorded.'),
+        onAdClicked: (_) => _logger.fine('Native ad clicked.'),
       ),
       // Use the template style
       nativeTemplateStyle: widget.templateStyle,
@@ -171,6 +166,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
   Widget build(BuildContext context) {
     // If ads are disabled globally and we don't need to keep space
     if (!AdHelper.showAds && !widget.keepSpaceWhenAdNotAvailable) {
+      _logger.fine('Ad hidden due to settings.');
       return const SizedBox.shrink();
     }
 

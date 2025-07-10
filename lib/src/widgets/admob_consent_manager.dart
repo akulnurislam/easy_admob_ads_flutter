@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_admob_ads_flutter/easy_admob_ads_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 
 typedef OnConsentGatheringCompleteListener = void Function(FormError? error);
 
@@ -10,6 +11,8 @@ typedef OnConsentGatheringCompleteListener = void Function(FormError? error);
 /// users in GDPR impacted countries. This is an example and you can choose
 /// another consent management platform to capture consent.
 class ConsentManager {
+  static final Logger _logger = Logger('AdmobConsentManager');
+
   /// Helper variable to determine if the app can request ads.
   Future<bool> canRequestAds() async {
     return await ConsentInformation.instance.canRequestAds();
@@ -48,7 +51,7 @@ class ConsentManager {
 
   /// Helper method to call the Mobile Ads SDK method to show the privacy options form.
   void showPrivacyOptionsForm(OnConsentFormDismissedListener onConsentFormDismissedListener) {
-    debugPrint('[ConsentManager] AdHelper.showConstentGDPR = ${AdHelper.showConstentGDPR}');
+    _logger.info('Showing Consent - AdHelper.showConstentGDPR = ${AdHelper.showConstentGDPR}');
     ConsentForm.showPrivacyOptionsForm(onConsentFormDismissedListener);
   }
 }

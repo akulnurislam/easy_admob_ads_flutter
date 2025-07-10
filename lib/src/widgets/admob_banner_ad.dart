@@ -3,6 +3,7 @@ import 'package:easy_admob_ads_flutter/src/ad_helper.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_state.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 class AdmobBannerAd extends StatefulWidget {
   final AdSize adSize;
@@ -17,6 +18,7 @@ class AdmobBannerAd extends StatefulWidget {
 }
 
 class _AdmobBannerAdState extends State<AdmobBannerAd> {
+  static final Logger _logger = Logger('AdmobBannerAd');
   BannerAd? _bannerAd;
   AdState _adState = AdState.initial;
 
@@ -48,6 +50,7 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
+          _logger.info('Banner Ad loaded successfully.');
           setState(() {
             _adState = AdState.loaded;
           });
@@ -57,6 +60,8 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
+          _logger.warning('Banner ad failed to load: ${error.message}');
+
           setState(() {
             _adState = AdState.error;
           });
@@ -64,22 +69,23 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
             widget.onAdStateChanged!(AdState.error);
           }
           AdException.check(error, adUnitId: AdHelper.bannerAdUnitId, adType: "Banner Ad");
-          debugPrint('Banner ad failed to load: ${error.message}');
 
           // Retry loading after delay if there was an error
           Future.delayed(const Duration(minutes: 1), () {
             if (mounted && AdHelper.showAds) {
+              _logger.fine('Retrying banner ad load after failure...');
               _loadAd();
             }
           });
         },
         onAdClicked: (_) {
-          debugPrint('Banner ad clicked');
+          _logger.fine('Banner ad clicked.');
         },
         onAdImpression: (_) {
-          debugPrint('Banner ad impression recorded');
+          _logger.fine('Banner ad impression recorded.');
         },
         onAdClosed: (_) {
+          _logger.info('Banner ad closed.');
           setState(() {
             _adState = AdState.closed;
           });
@@ -88,7 +94,7 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
           }
         },
         onAdOpened: (_) {
-          debugPrint('Banner ad opened');
+          _logger.fine('Banner ad opened.');
         },
       ),
     );

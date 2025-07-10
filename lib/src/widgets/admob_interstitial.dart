@@ -2,10 +2,11 @@ import 'package:easy_admob_ads_flutter/src/ad_exceptions.dart';
 import 'package:easy_admob_ads_flutter/src/ad_helper.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_result.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_state.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 
 class AdmobInterstitialAd {
+  static final Logger _logger = Logger('AdmobInterstitialAd');
   InterstitialAd? _interstitialAd;
   AdState _adState = AdState.initial;
   DateTime? _lastShowTime;
@@ -30,6 +31,7 @@ class AdmobInterstitialAd {
     }
 
     if (_adState == AdState.loading || _adState == AdState.loaded) {
+      _logger.fine('Interstitial ad already loading or loaded. Skipping new load request.');
       return;
     }
 
@@ -43,6 +45,7 @@ class AdmobInterstitialAd {
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
+          _logger.info('Interstitial ad loaded.');
           _interstitialAd = ad;
           _adState = AdState.loaded;
           if (onAdStateChanged != null) {
@@ -51,6 +54,7 @@ class AdmobInterstitialAd {
 
           _interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (InterstitialAd ad) {
+              _logger.info('Interstitial ad dismissed.');
               _lastShowTime = DateTime.now();
               ad.dispose();
               _adState = AdState.closed;
@@ -63,32 +67,32 @@ class AdmobInterstitialAd {
               loadAd();
             },
             onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+              _logger.warning('Failed to show interstitial ad: ${error.message}');
               ad.dispose();
               _adState = AdState.error;
               if (onAdStateChanged != null) {
                 onAdStateChanged!(AdState.error);
               }
               _interstitialAd = null;
-              debugPrint('Interstitial ad failed to show: ${error.message}');
 
               // Try loading again after error
               Future.delayed(const Duration(seconds: 30), loadAd);
             },
             onAdShowedFullScreenContent: (_) {
-              debugPrint('Interstitial ad showed successfully');
+              _logger.info('Interstitial ad shown.');
             },
             onAdImpression: (_) {
-              debugPrint('Interstitial ad impression recorded');
+              _logger.fine('Interstitial ad impression recorded.');
             },
           );
         },
         onAdFailedToLoad: (LoadAdError error) {
+          _logger.warning('Interstitial ad failed to load: ${error.message}');
           _adState = AdState.error;
           if (onAdStateChanged != null) {
             onAdStateChanged!(AdState.error);
           }
           AdException.check(error, adUnitId: AdHelper.interstitialAdUnitId, adType: "Interstitial Ad");
-          debugPrint('Interstitial ad failed to load: ${error.message}');
 
           // Retry loading after delay
           Future.delayed(const Duration(seconds: 30), loadAd);
@@ -108,11 +112,13 @@ class AdmobInterstitialAd {
       final timeSinceLastAd = DateTime.now().difference(_lastShowTime!);
       if (timeSinceLastAd < minTimeBetweenAds) {
         final secondsLeft = (minTimeBetweenAds - timeSinceLastAd).inSeconds;
+        _logger.fine('Interstitial ad cooldown active. Wait $secondsLeft seconds.');
         return AdResult(wasShown: false, message: 'Not enough time passed since last ad. Try again in $secondsLeft seconds', failReason: AdFailReason.cooldownPeriod);
       }
     }
 
     if (_interstitialAd == null || _adState != AdState.loaded) {
+      _logger.fine('Interstitial ad not ready. Current state: $_adState');
       return AdResult(wasShown: false, message: 'Ad not ready yet. Current state: $_adState', failReason: AdFailReason.notLoaded);
     }
 
@@ -120,7 +126,7 @@ class AdmobInterstitialAd {
       await _interstitialAd?.show();
       return AdResult(wasShown: true, message: 'Ad shown successfully');
     } catch (e) {
-      debugPrint('Error showing interstitial ad: $e');
+      _logger.severe('Error showing interstitial ad: $e');
       _interstitialAd?.dispose();
       _interstitialAd = null;
       _adState = AdState.error;

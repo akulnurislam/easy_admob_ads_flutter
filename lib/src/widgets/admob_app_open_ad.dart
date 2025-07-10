@@ -3,11 +3,12 @@ import 'package:easy_admob_ads_flutter/src/ad_exceptions.dart';
 import 'package:easy_admob_ads_flutter/src/ad_helper.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_result.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_state.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdmobAppOpenAd {
+  static final Logger _logger = Logger('AdmobAppOpenAd');
   static final AdmobAppOpenAd _instance = AdmobAppOpenAd._internal();
   factory AdmobAppOpenAd() => _instance;
   AdmobAppOpenAd._internal();
@@ -51,7 +52,7 @@ class AdmobAppOpenAd {
       _hasCheckedFirstOpen = true;
       return _isAppFirstEverOpen;
     } catch (e) {
-      debugPrint('Error checking first launch status: $e');
+      _logger.warning('Error checking first launch status: $e');
       _hasCheckedFirstOpen = true;
       return false;
     }
@@ -90,7 +91,7 @@ class AdmobAppOpenAd {
             if (onAdStateChanged != null) {
               onAdStateChanged!(AdState.loaded);
             }
-            debugPrint('App Open Ad loaded successfully');
+            _logger.info('App Open Ad loaded successfully');
 
             // If this is the first app open (but not the first ever cold start) and ad is loaded, show it
             if (_isAppFirstOpen && !isFirstEverOpen) {
@@ -109,7 +110,7 @@ class AdmobAppOpenAd {
               onAdStateChanged!(AdState.error);
             }
             AdException.check(error, adUnitId: AdHelper.appOpenAdUnitId, adType: "App Open Ad");
-            debugPrint('App Open Ad failed to load: ${error.message}');
+            _logger.warning('App Open Ad failed to load: ${error.message}');
 
             _isAppFirstOpen = false; // Reset first open flag on failure
 
@@ -119,7 +120,7 @@ class AdmobAppOpenAd {
         ),
       );
     } catch (e) {
-      debugPrint('Error loading App Open Ad: $e');
+      _logger.severe('Error loading App Open Ad: $e');
       _adState = AdState.error;
       if (onAdStateChanged != null) {
         onAdStateChanged!(AdState.error);
@@ -133,9 +134,11 @@ class AdmobAppOpenAd {
     // Check if this is the first ever open of the app
     bool isFirstEverOpen = await _checkIfFirstEverOpen();
 
+    _logger.fine('Ad Ready State: isAdReady=$isAdReady, isAppFirstOpen=$_isAppFirstOpen');
+
     // Skip showing if this is the first ever cold start
     if (isFirstEverOpen) {
-      debugPrint('Skipping App Open Ad on first ever cold start');
+      _logger.info('Skipping App Open Ad on first ever cold start');
       _isAppFirstOpen = false;
       return AdResult(wasShown: false, message: 'First app install cold start - skipping ad', failReason: AdFailReason.adsDisabled);
     }
@@ -158,6 +161,10 @@ class AdmobAppOpenAd {
         final timeSinceLastAd = DateTime.now().difference(_lastShowTime!);
         if (timeSinceLastAd < minTimeBetweenAds) {
           final secondsLeft = (minTimeBetweenAds - timeSinceLastAd).inSeconds;
+          _logger.fine(
+            '⏱️ Cooldown active. Time since last ad: ${timeSinceLastAd.inSeconds}s. '
+            'Try again in $secondsLeft seconds.',
+          );
           return AdResult(wasShown: false, message: 'Not enough time passed since last ad. Try again in $secondsLeft seconds', failReason: AdFailReason.cooldownPeriod);
         }
       }
@@ -177,17 +184,17 @@ class AdmobAppOpenAd {
 
         _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdShowedFullScreenContent: (ad) {
-            debugPrint('App Open Ad showed full screen content');
+            _logger.info('App Open Ad showed full screen content');
           },
           onAdFailedToShowFullScreenContent: (ad, error) {
-            debugPrint('App Open Ad failed to show: ${error.message}');
+            _logger.warning('App Open Ad failed to show: ${error.message}');
             _isShowingAd = false;
             ad.dispose();
             _appOpenAd = null;
             _isAppFirstOpen = false;
           },
           onAdDismissedFullScreenContent: (ad) {
-            debugPrint('App Open Ad was dismissed');
+            _logger.info('App Open Ad was dismissed');
             _isShowingAd = false;
             _lastShowTime = DateTime.now();
             ad.dispose();
@@ -198,14 +205,14 @@ class AdmobAppOpenAd {
             loadAd();
           },
           onAdImpression: (ad) {
-            debugPrint('App Open Ad impression recorded');
+            _logger.fine('App Open Ad impression recorded');
           },
         );
 
         await _appOpenAd!.show();
         return AdResult(wasShown: true, message: 'App Open Ad shown successfully');
       } catch (e) {
-        debugPrint('Error showing App Open Ad: $e');
+        _logger.severe('Error showing App Open Ad: $e');
         _isShowingAd = false;
         _appOpenAd?.dispose();
         _appOpenAd = null;

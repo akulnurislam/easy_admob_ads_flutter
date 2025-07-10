@@ -9,6 +9,7 @@ void main() async {
   // Android: https://developers.google.com/admob/flutter/quick-start#android
   // iOS:    https://developers.google.com/admob/flutter/quick-start#ios
 
+  // Sets up global logging for Easy Admob Ads Flutter Package
   AdHelper.setupAdLogging();
 
   // Set platform-specific test device IDs to ensure test ads are shown during development.

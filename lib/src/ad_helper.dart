@@ -23,10 +23,12 @@ class AdHelper {
 
   /// Call this from your app's main() if you want to see logs from this package.
   static void setupAdLogging({Level level = Level.ALL}) {
-    Logger.root.level = level;
-    Logger.root.onRecord.listen((record) {
-      debugPrint('[${record.level.name}] ${record.loggerName}: ${record.message}');
-    });
+    if (kDebugMode) {
+      Logger.root.level = level;
+      Logger.root.onRecord.listen((record) {
+        debugPrint('[${record.level.name}] ${record.loggerName}: ${record.message}');
+      });
+    }
   }
 
   // Get Banner Ad Unit ID
