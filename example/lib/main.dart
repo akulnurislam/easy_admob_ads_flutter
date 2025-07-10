@@ -115,8 +115,6 @@ class _AdsDemoState extends State<AdsDemo> {
       },
     );
     _rewardedInterstitialAd.loadAd();
-
-    // App Open
   }
 
   void _showInterstitialAd() async {

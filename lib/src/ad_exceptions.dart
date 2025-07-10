@@ -15,7 +15,11 @@ class AdException implements Exception {
   }
 
   /// Stops app execution and logs critical ad format mismatch.
-  static void _terminateApp(LoadAdError error, {String? adUnitId, String? adType}) {
+  static void _terminateApp(
+    LoadAdError error, {
+    String? adUnitId,
+    String? adType,
+  }) {
     final adUnit = adUnitId ?? 'unknown';
 
     final fatalMessage =
