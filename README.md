@@ -12,8 +12,9 @@
 
 ## Screenshots
 <p float="left">
-  <img src="example/screenshots/demo.png" width="20%" alt="Static AdMob Demo" />
+  <img src="example/screenshots/demo-iphone.png" width="20%" alt="Static AdMob Demo" />
   <img src="example/screenshots/demo.gif" width="20.1%" alt="Animated AdMob Demo" />
+  <img src="example/screenshots/demo-ipad.png" width="31%" alt="Static AdMob Demo" />
 </p>
 
 ## Features

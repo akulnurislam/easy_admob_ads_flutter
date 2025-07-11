@@ -14,8 +14,10 @@ topics:
   - google-admob-flutter
   - monetization
 screenshots:
-  - description: 'Displays various AdMob ad types integrated using the easy_admob_ads_flutter package.'
-    path: example/screenshots/demo.png
+  - description: 'iPhone Displays various AdMob ad types integrated using the easy_admob_ads_flutter package.'
+    path: example/screenshots/demo-iphone.png
+  - description: 'iPad Displays various AdMob ad types integrated using the easy_admob_ads_flutter package.'
+    path: example/screenshots/demo-ipad.png
   - description: 'Demonstrates integration of all major AdMob ad types using easy_admob_ads_flutter.'
     path: example/screenshots/demo.gif
 
