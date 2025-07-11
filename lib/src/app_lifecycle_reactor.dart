@@ -6,22 +6,55 @@ import 'package:logging/logging.dart';
 
 class AppLifecycleReactor {
   static final Logger _logger = Logger('AppLifecycleReactor');
-  final AdmobAppOpenAd appOpenAdManager;
 
-  AppLifecycleReactor({required this.appOpenAdManager});
+  final AdmobAppOpenAd appOpenAdManager;
+  final Duration cooldownDuration;
+  final Duration minimumBackgroundDuration;
+
+  DateTime? _lastAdAttemptTime;
+  DateTime? _backgroundEnterTime;
+
+  AppLifecycleReactor({required this.appOpenAdManager, this.cooldownDuration = const Duration(seconds: 60), this.minimumBackgroundDuration = const Duration(minutes: 2)});
 
   void listenToAppStateChanges() {
     _logger.info('Started listening to app state changes.');
     AppStateEventNotifier.startListening();
-    AppStateEventNotifier.appStateStream.listen((state) => _onAppStateChanged(state));
+    AppStateEventNotifier.appStateStream.listen(_onAppStateChanged);
   }
 
   void _onAppStateChanged(AppState appState) {
     _logger.info('App state changed to: $appState');
-    // Show an app open ad when the app is brought to foreground
+
+    final now = DateTime.now();
+
+    if (appState == AppState.background) {
+      _backgroundEnterTime = now;
+      // _logger.fine('Entered background at: $_backgroundEnterTime');
+    }
+
     if (appState == AppState.foreground) {
-      _logger.fine('Triggering App Open Ad...');
-      appOpenAdManager.showAdIfAvailable();
+      // Only proceed if background entry time is known
+      if (_backgroundEnterTime != null) {
+        final backgroundDuration = now.difference(_backgroundEnterTime!);
+
+        if (backgroundDuration >= minimumBackgroundDuration) {
+          // _logger.fine('Returned from REAL background (duration: ${backgroundDuration.inSeconds}s)');
+
+          if (_lastAdAttemptTime == null || now.difference(_lastAdAttemptTime!) >= cooldownDuration) {
+            _lastAdAttemptTime = now;
+            _logger.fine('Cooldown passed. Triggering App Open Ad...');
+            appOpenAdManager.showAdIfAvailable();
+          } else {
+            final remaining = cooldownDuration - now.difference(_lastAdAttemptTime!);
+            _logger.fine('App Open Ad skipped due to cooldown. Time remaining: ${remaining.inSeconds}s');
+          }
+        } else {
+          // _logger.fine('Returned from SHORT pause — not considered real background (duration: ${backgroundDuration.inMilliseconds}ms)');
+        }
+
+        // Reset background entry time
+        _backgroundEnterTime = null;
+      }
     }
   }
 }
