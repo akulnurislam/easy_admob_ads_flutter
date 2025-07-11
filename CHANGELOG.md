@@ -23,3 +23,7 @@
 
 * Revemoved test id bug, Updated README.md and Consent Added with Global isPrivacyOptionRequired variable
 * Logger package added
+
+## 0.0.7
+
+* App Open Ad Issue fixed with real background time difference check
