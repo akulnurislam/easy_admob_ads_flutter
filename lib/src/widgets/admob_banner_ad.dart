@@ -25,6 +25,8 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
   AdSize? _adSize;
+  int _retryCount = 0;
+  final int _maxRetries = 3;
   Timer? _retryTimer;
 
   @override
@@ -45,6 +47,8 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
       return;
     }
 
+    if (!mounted) return;
+
     setState(() {
       _adSize = adSize;
     });
@@ -57,31 +61,37 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
       request: adRequest,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
+          if (_isAdLoaded) return; // Prevent double handling
           _logger.info('✅ Banner ad loaded.');
           _retryTimer?.cancel();
-          setState(() {
-            _isAdLoaded = true;
-          });
+          if (mounted) {
+            setState(() => _isAdLoaded = true);
+          }
           widget.onAdStateChanged?.call(AdState.loaded);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           _logger.warning('❌ Banner ad failed: ${error.message}');
           ad.dispose();
-          setState(() {
-            _isAdLoaded = false;
-          });
+          if (mounted) {
+            setState(() => _isAdLoaded = false);
+          }
           widget.onAdStateChanged?.call(AdState.error);
           AdException.check(error, adUnitId: AdHelper.bannerAdUnitId, adType: "Banner Ad");
 
-          // Retry loading ad after 30 seconds
-          _retryTimer?.cancel();
-          _retryTimer = Timer(const Duration(seconds: 30), () {
-            if (mounted && AdHelper.showAds) {
-              _logger.info('🔁 Retrying banner ad load...');
-              _bannerAd = null;
-              _loadBannerAd();
-            }
-          });
+          // Retry if under limit
+          if (_retryCount < _maxRetries) {
+            _retryTimer?.cancel();
+            _retryTimer = Timer(const Duration(seconds: 30), () {
+              if (mounted && AdHelper.showAds) {
+                _retryCount++;
+                _logger.info('🔁 Retrying banner ad ($_retryCount/$_maxRetries)...');
+                _bannerAd = null;
+                _loadBannerAd();
+              }
+            });
+          } else {
+            _logger.warning('🛑 Max retry attempts reached.');
+          }
         },
         onAdOpened: (_) => _logger.fine('🔓 Banner ad opened'),
         onAdClosed: (_) => _logger.fine('🔒 Banner ad closed'),

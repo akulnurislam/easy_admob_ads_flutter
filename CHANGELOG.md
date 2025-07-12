@@ -27,3 +27,7 @@
 ## 0.0.7
 
 * App Open Ad Issue fixed with real background time difference check
+
+## 0.0.8
+
+* Collapsible Feature Added in Banner Ad
