@@ -94,7 +94,7 @@ void main() async {
   // Leave any value as an empty string ("") to skip that ad type.
   AdIdRegistry.initialize(
     ios: {
-      AdType.banner: 'ca-app-pub-3940256099942544/2934735716', // Test ID
+      AdType.banner: 'ca-app-pub-3940256099942544/8388050270', // Test ID
       AdType.interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test ID
       AdType.rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test ID
       AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/6978759866', // Test ID
@@ -102,7 +102,7 @@ void main() async {
       AdType.native: 'ca-app-pub-3940256099942544/3986624511', // Test ID
     },
     android: {
-      AdType.banner: 'ca-app-pub-3940256099942544/6300978111', // Test ID
+      AdType.banner: 'ca-app-pub-3940256099942544/2014213617', // Test ID
       AdType.interstitial: 'ca-app-pub-3940256099942544/1033173712', // Test ID
       AdType.rewarded: 'ca-app-pub-3940256099942544/5224354917', // Test ID
       AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/5354046379', // Test ID
@@ -136,7 +136,7 @@ After initializing AdMob and registering your ad unit IDs, you can use the follo
 ### Banner Ad
 
 ```dart
-AdmobBannerAd(adSize: AdSize(width: screenWidth, height: 120))
+AdmobBannerAd(collapsible: true, height: 100)
 ```
 
 ### Native Ad

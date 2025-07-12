@@ -19,7 +19,7 @@ void main() async {
   // Leave any value as an empty string ("") to skip that ad type.
   AdIdRegistry.initialize(
     ios: {
-      AdType.banner: 'ca-app-pub-3940256099942544/2934735716', // Test ID
+      AdType.banner: 'ca-app-pub-3940256099942544/8388050270', // Test ID
       AdType.interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test ID
       AdType.rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test ID
       AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/6978759866', // Test ID
@@ -27,7 +27,7 @@ void main() async {
       AdType.native: 'ca-app-pub-3940256099942544/3986624511', // Test ID
     },
     android: {
-      AdType.banner: 'ca-app-pub-3940256099942544/6300978111', // Test ID
+      AdType.banner: 'ca-app-pub-3940256099942544/2014213617', // Test ID
       AdType.interstitial: 'ca-app-pub-3940256099942544/1033173712', // Test ID
       AdType.rewarded: 'ca-app-pub-3940256099942544/5224354917', // Test ID
       AdType.rewardedInterstitial: 'ca-app-pub-3940256099942544/5354046379', // Test ID
@@ -176,10 +176,9 @@ class _AdsDemoState extends State<AdsDemo> {
   @override
   Widget build(BuildContext context) {
     bool showAds = AdHelper.showAds;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(title: const Text('AdMob All Ads Demo')),
-      bottomNavigationBar: AdmobBannerAd(adSize: AdSize(width: screenWidth.toInt(), height: 120)),
+      bottomNavigationBar: AdmobBannerAd(collapsible: true, height: 100),
       body: SingleChildScrollView(
         child: Column(
           children: [
