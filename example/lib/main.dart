@@ -107,14 +107,22 @@ class _AdsDemoState extends State<AdsDemo> {
         setState(() {
           switch (state) {
             case AdState.initial:
+              // Initial state before any action
               break;
             case AdState.loading:
+              // Ad is loading
               break;
             case AdState.loaded:
+              // Ad loaded successfully and ready to show
               break;
             case AdState.error:
+              // Error occurred during loading/showing
               break;
             case AdState.closed:
+              // Ad was closed by the user
+              break;
+            case AdState.disabled:
+              // Ad was disabled by showAd = false
               break;
           }
         });

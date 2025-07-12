@@ -31,3 +31,8 @@
 ## 0.0.8
 
 * Collapsible Feature Added in Banner Ad
+
+## 0.0.9
+
+* Added support for Immersive Mode on Android: Interstitial ads, Rewarded ads, Rewarded interstitial ads
+* AdState Fixed: Add disabled when showAds = false globally

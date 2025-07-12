@@ -62,6 +62,7 @@ class AdmobAppOpenAd {
   Future<void> loadAd() async {
     // Skip loading if ads are disabled or already showing an ad
     if (!AdHelper.showAds || _isShowingAd) {
+      _logger.fine('Ads are disabled. App open ad will not load.');
       return;
     }
 

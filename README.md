@@ -3,6 +3,7 @@
 # Easy AdMob Integration for Flutter
 
 [![pub package](https://img.shields.io/pub/v/easy_admob_ads_flutter.svg?logo=dart\&logoColor=00b9fc)](https://pub.dev/packages/easy_admob_ads_flutter)
+![Pub Points](https://img.shields.io/pub/points/easy_admob_ads_flutter?label=Pub.dev%20Points)
 [![Last Commit](https://img.shields.io/github/last-commit/huzaibsayyed/easy_admob_ads_flutter?logo=git\&logoColor=white)](https://github.com/huzaibsayyed/easy_admob_ads_flutter/commits/main)
 [![Pull Requests](https://img.shields.io/github/issues-pr/huzaibsayyed/easy_admob_ads_flutter?logo=github\&logoColor=white)](https://github.com/huzaibsayyed/easy_admob_ads_flutter/pulls)
 [![Code Size](https://img.shields.io/github/languages/code-size/huzaibsayyed/easy_admob_ads_flutter?logo=github\&logoColor=white)](https://github.com/huzaibsayyed/easy_admob_ads_flutter)

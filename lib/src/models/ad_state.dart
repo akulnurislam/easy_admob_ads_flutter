@@ -4,4 +4,5 @@ enum AdState {
   loaded, // Ad loaded successfully and ready to show
   error, // Error occurred during loading/showing
   closed, // Ad was closed by the user
+  disabled, // Ad was disabled by showAd = false globally
 }

@@ -85,9 +85,9 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
     if (AdHelper.showAds) {
       _loadAd();
     } else {
-      _adState = AdState.closed;
+      _adState = AdState.disabled;
       if (widget.onAdStateChanged != null) {
-        widget.onAdStateChanged!(AdState.closed);
+        widget.onAdStateChanged!(AdState.disabled);
       }
     }
   }
@@ -166,7 +166,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
   Widget build(BuildContext context) {
     // If ads are disabled globally and we don't need to keep space
     if (!AdHelper.showAds && !widget.keepSpaceWhenAdNotAvailable) {
-      _logger.fine('Ad hidden due to settings.');
+      _logger.fine('Ads are disabled. Native ad will not load.');
       return const SizedBox.shrink();
     }
 

@@ -112,7 +112,10 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
 
   @override
   Widget build(BuildContext context) {
-    if (!AdHelper.showAds) return const SizedBox.shrink();
+    if (!AdHelper.showAds) {
+      _logger.fine('Ads are disabled. Banner ad will not load.');
+      return const SizedBox.shrink();
+    }
 
     final isLoading = !_isAdLoaded || _bannerAd == null || _adSize == null;
 

@@ -16,21 +16,23 @@ class AdmobRewardedInterstitialAd {
   final void Function(AdState state)? onAdStateChanged;
   final void Function(RewardItem reward)? onRewardEarned;
   final Duration minTimeBetweenAds;
+  final bool setImmersiveEnabled;
 
   AdmobRewardedInterstitialAd({
     this.onAdStateChanged,
     this.onRewardEarned,
     // Default minimum time between showing rewarded interstitial ads
     this.minTimeBetweenAds = const Duration(minutes: 1),
+    this.setImmersiveEnabled = true,
   });
 
   Future<void> loadAd() async {
     // Skip loading if ads are disabled
     if (!AdHelper.showAds) {
       _logger.fine('Ads are disabled. Rewarded interstitial ad will not load.');
-      _adState = AdState.closed;
+      _adState = AdState.disabled;
       if (onAdStateChanged != null) {
-        onAdStateChanged!(AdState.closed);
+        onAdStateChanged!(AdState.disabled);
       }
       return;
     }
@@ -51,6 +53,7 @@ class AdmobRewardedInterstitialAd {
         request: const AdRequest(),
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
           onAdLoaded: (RewardedInterstitialAd ad) {
+            ad.setImmersiveMode(setImmersiveEnabled);
             _rewardedInterstitialAd = ad;
             _adState = AdState.loaded;
             _retryAttempt = 0; // Reset retry counter on successful load

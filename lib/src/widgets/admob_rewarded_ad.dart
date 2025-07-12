@@ -14,21 +14,23 @@ class AdmobRewardedAd {
   final void Function(AdState state)? onAdStateChanged;
   final void Function(RewardItem reward)? onRewardEarned;
   final Duration minTimeBetweenAds;
+  final bool setImmersiveEnabled;
 
   AdmobRewardedAd({
     this.onAdStateChanged,
     this.onRewardEarned,
     // Default minimum time between showing rewarded ads
     this.minTimeBetweenAds = const Duration(minutes: 1),
+    this.setImmersiveEnabled = true,
   });
 
   Future<void> loadAd() async {
     // Skip loading if ads are disabled
     if (!AdHelper.showAds) {
       _logger.fine('Ads are disabled. Rewarded ad will not load.');
-      _adState = AdState.closed;
+      _adState = AdState.disabled;
       if (onAdStateChanged != null) {
-        onAdStateChanged!(AdState.closed);
+        onAdStateChanged!(AdState.disabled);
       }
       return;
     }
@@ -48,6 +50,7 @@ class AdmobRewardedAd {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
+          ad.setImmersiveMode(setImmersiveEnabled);
           _logger.info('Rewarded ad loaded successfully.');
           _rewardedAd = ad;
           _adState = AdState.loaded;

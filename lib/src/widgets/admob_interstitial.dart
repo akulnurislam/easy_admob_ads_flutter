@@ -13,19 +13,22 @@ class AdmobInterstitialAd {
 
   final void Function(AdState state)? onAdStateChanged;
   final Duration minTimeBetweenAds;
+  final bool setImmersiveEnabled;
 
   AdmobInterstitialAd({
     this.onAdStateChanged,
     // Default minimum time between showing interstitial ads is 1 minute
     this.minTimeBetweenAds = const Duration(minutes: 1),
+    this.setImmersiveEnabled = true,
   });
 
   Future<void> loadAd() async {
     // Skip loading if ads are disabled
     if (!AdHelper.showAds) {
-      _adState = AdState.closed;
+      _logger.fine('Ads are disabled. Interstial ad will not load.');
+      _adState = AdState.disabled;
       if (onAdStateChanged != null) {
-        onAdStateChanged!(AdState.closed);
+        onAdStateChanged!(AdState.disabled);
       }
       return;
     }
@@ -45,6 +48,7 @@ class AdmobInterstitialAd {
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
+          ad.setImmersiveMode(setImmersiveEnabled);
           _logger.info('Interstitial ad loaded.');
           _interstitialAd = ad;
           _adState = AdState.loaded;
