@@ -36,3 +36,7 @@
 
 * Added support for Immersive Mode on Android: Interstitial ads, Rewarded ads, Rewarded interstitial ads
 * AdState Fixed: Add disabled when showAds = false globally
+
+## 1.0.0
+
+* Updated GDPR Settings Button in Readme

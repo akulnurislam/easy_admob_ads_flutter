@@ -246,6 +246,9 @@ class _AdsDemoState extends State<AdsDemo> {
                   _consentManager.showPrivacyOptionsForm((formError) {
                     if (formError != null) {
                       debugPrint("${formError.errorCode}: ${formError.message}");
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The privacy options form is unavailable because it is not required.")));
+                      }
                     }
                   });
                 },

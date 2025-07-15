@@ -194,12 +194,14 @@ You can also control when App Open ads show automatically using: `AdHelper.showA
 final consentManager = ConsentManager();
 
 if (AdHelper.isPrivacyOptionsRequired) ...[
-SizedBox(height: 15),
 ElevatedButton(
   onPressed: () {
-    _consentManager.showPrivacyOptionsForm((formError) {
+    consentManager.showPrivacyOptionsForm((formError) {
       if (formError != null) {
         debugPrint("${formError.errorCode}: ${formError.message}");
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The privacy options form is unavailable because it is not required.")));
+        }
       }
     });
   },
@@ -214,3 +216,5 @@ This ensures GDPR compliance using Google’s User Messaging Platform (UMP). Use
 ##### Huzaib Sayyed
 
 [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/huzaibsayyed) [![LinkedIn](https://custom-icon-badges.demolab.com/badge/LinkedIn-0A66C2?logo=linkedin-white&logoColor=fff)](https://www.linkedin.com/in/huzaif7)
+[![Visit StudyGyaan](https://img.shields.io/badge/Visit-StudyGyaan-brightgreen?style=flat)](https://studygyaan.com)
+
