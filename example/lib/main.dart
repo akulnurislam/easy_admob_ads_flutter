@@ -38,7 +38,7 @@ void main() async {
 
   // Global Ad Configuration
   AdHelper.showAds = true; // Set to false to disable all ads globally
-  // AdHelper.showAppOpenAds = true; // Set to false to disable App Open Ad on startup
+  // AdHelper.showAppOpenAds = false; // Set to false to disable App Open Ad on startup
 
   // AdHelper.showConstentGDPR = true; // Simulate GDPR consent (debug only, false in release)
 

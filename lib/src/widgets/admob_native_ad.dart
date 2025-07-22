@@ -13,9 +13,6 @@ class AdmobNativeAd extends StatefulWidget {
   /// Callback for ad state changes
   final void Function(AdState state)? onAdStateChanged;
 
-  /// Whether to keep space when ad is not available
-  final bool keepSpaceWhenAdNotAvailable;
-
   /// The ad template style
   final NativeTemplateStyle templateStyle;
 
@@ -24,26 +21,17 @@ class AdmobNativeAd extends StatefulWidget {
     super.key,
     required this.height,
     this.onAdStateChanged,
-    this.keepSpaceWhenAdNotAvailable = false,
     required this.templateStyle, // Made required to avoid default value issue
   });
 
   // Factory constructors for common template styles
 
   /// Creates a small native ad with default styling
-  factory AdmobNativeAd.small({
-    Key? key,
-    double height = 120.0,
-    void Function(AdState state)? onAdStateChanged,
-    bool keepSpaceWhenAdNotAvailable = false,
-    Color backgroundColor = Colors.white,
-    double cornerRadius = 8.0,
-  }) {
+  factory AdmobNativeAd.small({Key? key, double height = 120.0, void Function(AdState state)? onAdStateChanged, Color backgroundColor = Colors.white, double cornerRadius = 8.0}) {
     return AdmobNativeAd(
       key: key,
       height: height,
       onAdStateChanged: onAdStateChanged,
-      keepSpaceWhenAdNotAvailable: keepSpaceWhenAdNotAvailable,
       templateStyle: NativeTemplateStyle(templateType: TemplateType.small, mainBackgroundColor: backgroundColor, cornerRadius: cornerRadius),
     );
   }
@@ -61,7 +49,6 @@ class AdmobNativeAd extends StatefulWidget {
       key: key,
       height: height,
       onAdStateChanged: onAdStateChanged,
-      keepSpaceWhenAdNotAvailable: keepSpaceWhenAdNotAvailable,
       templateStyle: NativeTemplateStyle(templateType: TemplateType.medium, mainBackgroundColor: backgroundColor, cornerRadius: cornerRadius),
     );
   }
@@ -165,7 +152,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
   @override
   Widget build(BuildContext context) {
     // If ads are disabled globally and we don't need to keep space
-    if (!AdHelper.showAds && !widget.keepSpaceWhenAdNotAvailable) {
+    if (!AdHelper.showAds) {
       _logger.fine('Ads are disabled. Native ad will not load.');
       return const SizedBox.shrink();
     }
@@ -174,20 +161,6 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
       return SizedBox(
         height: widget.height,
         child: AdWidget(ad: _nativeAd!),
-      );
-    }
-
-    // If ads are disabled but we need to keep space, or if ad is loading/error
-    if (widget.keepSpaceWhenAdNotAvailable || _adState == AdState.loading) {
-      return Container(
-        height: widget.height,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
-        child: _adState == AdState.loading
-            ? const CircularProgressIndicator(strokeWidth: 2)
-            : _adState == AdState.error
-            ? const Text('Ad not available')
-            : null,
       );
     }
 

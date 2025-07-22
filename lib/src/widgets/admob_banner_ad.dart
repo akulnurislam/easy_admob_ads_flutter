@@ -11,9 +11,8 @@ class AdmobBannerAd extends StatefulWidget {
   final bool collapsible;
   final double? height;
   final void Function(AdState state)? onAdStateChanged;
-  final bool keepSpaceWhenAdNotAvailable;
 
-  const AdmobBannerAd({super.key, this.collapsible = false, this.height, this.onAdStateChanged, this.keepSpaceWhenAdNotAvailable = false});
+  const AdmobBannerAd({super.key, this.collapsible = false, this.height, this.onAdStateChanged});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -120,7 +119,7 @@ class _AdmobBannerAdState extends State<AdmobBannerAd> {
     final isLoading = !_isAdLoaded || _bannerAd == null || _adSize == null;
 
     if (isLoading) {
-      return Container(height: widget.height ?? _adSize?.height.toDouble(), width: _adSize?.width.toDouble(), alignment: Alignment.center, child: const CircularProgressIndicator(strokeWidth: 2));
+      return const SizedBox.shrink();
     }
 
     return Container(

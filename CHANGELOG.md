@@ -40,3 +40,7 @@
 ## 1.0.0
 
 * Updated GDPR Settings Button in Readme
+
+## 1.0.1
+
+* Removed the loading spinner for both banner and native ads
