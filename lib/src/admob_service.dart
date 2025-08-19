@@ -70,4 +70,8 @@ class AdmobService {
       _logger.warning('Ads cannot be requested due to lack of consent.');
     }
   }
+
+  void deinitialize() {
+    _isInitialized = false;
+  }
 }
