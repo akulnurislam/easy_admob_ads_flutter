@@ -18,3 +18,4 @@ export 'src/widgets/admob_rewarded_interstitial_ad.dart';
 // Package Exports
 export 'package:google_mobile_ads/google_mobile_ads.dart';
 export 'package:shared_preferences/shared_preferences.dart';
+export 'package:logging/logging.dart' show Level;
