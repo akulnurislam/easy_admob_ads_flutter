@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_admob_ads_flutter/src/ad_exceptions.dart';
 import 'package:easy_admob_ads_flutter/src/ad_helper.dart';
 import 'package:easy_admob_ads_flutter/src/models/ad_state.dart';
@@ -27,12 +29,22 @@ class AdmobNativeAd extends StatefulWidget {
   // Factory constructors for common template styles
 
   /// Creates a small native ad with default styling
-  factory AdmobNativeAd.small({Key? key, double height = 120.0, void Function(AdState state)? onAdStateChanged, Color backgroundColor = Colors.white, double cornerRadius = 8.0}) {
+  factory AdmobNativeAd.small({
+    Key? key,
+    double height = 120.0,
+    void Function(AdState state)? onAdStateChanged,
+    Color backgroundColor = Colors.white,
+    double cornerRadius = 8.0,
+  }) {
     return AdmobNativeAd(
       key: key,
       height: height,
       onAdStateChanged: onAdStateChanged,
-      templateStyle: NativeTemplateStyle(templateType: TemplateType.small, mainBackgroundColor: backgroundColor, cornerRadius: cornerRadius),
+      templateStyle: NativeTemplateStyle(
+        templateType: TemplateType.small,
+        mainBackgroundColor: backgroundColor,
+        cornerRadius: cornerRadius,
+      ),
     );
   }
 
@@ -49,7 +61,11 @@ class AdmobNativeAd extends StatefulWidget {
       key: key,
       height: height,
       onAdStateChanged: onAdStateChanged,
-      templateStyle: NativeTemplateStyle(templateType: TemplateType.medium, mainBackgroundColor: backgroundColor, cornerRadius: cornerRadius),
+      templateStyle: NativeTemplateStyle(
+        templateType: TemplateType.medium,
+        mainBackgroundColor: backgroundColor,
+        cornerRadius: cornerRadius,
+      ),
     );
   }
 
@@ -92,6 +108,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
 
     _nativeAd = NativeAd(
       adUnitId: AdHelper.nativeAdUnitId,
+      factoryId: Platform.isIOS ? 'nativeAdFactory' : null,
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           _logger.info('Native ad loaded successfully.');
@@ -109,7 +126,11 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
           _logger.warning('Native ad failed to load: ${error.message}');
-          AdException.check(error, adUnitId: AdHelper.nativeAdUnitId, adType: "Native Ad");
+          AdException.check(
+            error,
+            adUnitId: AdHelper.nativeAdUnitId,
+            adType: "Native Ad",
+          );
           if (mounted) {
             setState(() {
               _adState = AdState.error;
@@ -123,8 +144,11 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
           // Implement exponential backoff for retries
           if (_retryAttempt < _maxRetryAttempts && mounted) {
             _retryAttempt++;
-            final int retryDelay = _retryAttempt * 20; // Increasing delay with each retry
-            _logger.fine('Retrying native ad load in $retryDelay seconds (attempt $_retryAttempt of $_maxRetryAttempts)');
+            final int retryDelay =
+                _retryAttempt * 20; // Increasing delay with each retry
+            _logger.fine(
+              'Retrying native ad load in $retryDelay seconds (attempt $_retryAttempt of $_maxRetryAttempts)',
+            );
             Future.delayed(Duration(seconds: retryDelay), () {
               if (mounted) _loadAd();
             });
@@ -136,7 +160,7 @@ class _AdmobNativeAdState extends State<AdmobNativeAd> {
         onAdClicked: (_) => _logger.fine('Native ad clicked.'),
       ),
       // Use the template style
-      nativeTemplateStyle: widget.templateStyle,
+      nativeTemplateStyle: Platform.isAndroid ? widget.templateStyle : null,
       request: const AdRequest(),
     );
 
