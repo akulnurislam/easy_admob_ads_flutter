@@ -22,8 +22,8 @@ screenshots:
     path: example/screenshots/demo.gif
 
 environment:
-  sdk: ^3.10.8
-  flutter: ^3.38.9
+  sdk: ^3.11.4
+  flutter: ^3.41.6
 
 dependencies:
   flutter:
